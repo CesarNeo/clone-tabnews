@@ -1,6 +1,13 @@
 import { Client } from "pg";
 
-async function query(queryObject: string) {
+type TDatabaseQuery =
+  | {
+      text: string;
+      values?: any[];
+    }
+  | string;
+
+async function query(queryObject: TDatabaseQuery) {
   const client = new Client({
     host: process.env.POSTGRES_HOST,
     port: Number(process.env.POSTGRES_PORT),
@@ -8,11 +15,17 @@ async function query(queryObject: string) {
     database: process.env.POSTGRES_DB,
     password: process.env.POSTGRES_PASSWORD,
   });
-  await client.connect();
-  const result = await client.query(queryObject);
-  await client.end();
 
-  return result;
+  await client.connect();
+
+  try {
+    const result = await client.query(queryObject);
+    return result;
+  } catch (error) {
+    console.error("Database query error:", error);
+  } finally {
+    await client.end();
+  }
 }
 
 export default {
