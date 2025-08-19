@@ -10,11 +10,12 @@ export default async function migrations(
   request: NextApiRequest,
   response: NextApiResponse,
 ) {
-  if (!ALLOWED_METHODS.includes(request.method)) {
-    return response.status(405).end({
-      error: `Method Not Allowed: ${request.method}`,
+  if (!ALLOWED_METHODS.includes(String(request.method))) {
+    return response.status(405).json({
+      error: `Method Not Allowed ${request.method}`,
     });
   }
+  console.log("aqui");
   let dbClient: Client;
 
   try {
