@@ -42,6 +42,7 @@ export default async function migrations(
 
       if (migratedMigrations.length > 0) {
         response.status(201).json(migratedMigrations);
+        return;
       }
 
       response.status(200).json(migratedMigrations);
