@@ -1,4 +1,4 @@
-import { test, beforeAll } from "@jest/globals";
+import { test, beforeAll, expect } from "@jest/globals";
 import database from "infra/database";
 import orchestrator from "tests/orchestrator";
 
