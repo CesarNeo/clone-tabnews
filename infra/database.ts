@@ -37,7 +37,9 @@ async function query(queryObject: TDatabaseQuery) {
   }
 }
 
-export default {
+const database = {
   query,
   getNewClient,
 };
+
+export default database;
