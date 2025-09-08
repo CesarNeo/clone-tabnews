@@ -1,5 +1,5 @@
 import migrationRunner, { type RunnerOption } from "node-pg-migrate";
-import { join } from "node:path";
+import { resolve } from "node:path";
 import type { NextApiRequest, NextApiResponse } from "next";
 import database from "infra/database";
 import type { Client } from "pg";
@@ -15,7 +15,7 @@ export default async function migrations(
       error: `Method Not Allowed ${request.method}`,
     });
   }
-  console.log("aqui");
+
   let dbClient: Client;
 
   try {
@@ -23,7 +23,7 @@ export default async function migrations(
     const defaultMigrationOptions = {
       dbClient,
       dryRun: true,
-      dir: join("infra", "migrations"),
+      dir: resolve("infra", "migrations"),
       direction: "up",
       verbose: true,
       migrationsTable: "pgmigrations",
