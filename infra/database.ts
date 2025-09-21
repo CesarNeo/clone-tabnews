@@ -1,4 +1,5 @@
 import { Client } from "pg";
+import { ServiceError } from "./errors";
 
 type TDatabaseQuery =
   | {
@@ -30,8 +31,11 @@ async function query(queryObject: TDatabaseQuery) {
     const result = await client.query(queryObject);
     return result;
   } catch (error) {
-    console.error("Database query error:", error);
-    throw error;
+    const serviceErrorObject = new ServiceError({
+      message: "Error na conexão com o Banco ou na Query.",
+      cause: error,
+    });
+    throw serviceErrorObject;
   } finally {
     await client?.end();
   }
