@@ -4,13 +4,13 @@ import controller from "infra/controller";
 import user from "models/user";
 
 const router = createRouter();
-router.post(postHandler);
+router.get(getHandler);
 
 export default router.handler(controller.errorHandlers);
 
-async function postHandler(request: NextApiRequest, response: NextApiResponse) {
-  const userInputValues = request.body;
-  const newUser = await user.create(userInputValues);
+async function getHandler(request: NextApiRequest, response: NextApiResponse) {
+  const { username } = request.query;
+  const userFound = await user.findOneByUsername(username);
 
-  return response.status(201).json(newUser);
+  return response.status(200).json(userFound);
 }

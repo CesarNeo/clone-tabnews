@@ -1,5 +1,5 @@
 import database from "infra/database";
-import { ValidationError } from "infra/errors";
+import { NotFoundError, ValidationError } from "infra/errors";
 
 interface ICreateUserParams {
   username: string;
@@ -74,8 +74,39 @@ async function create(userInputValues: ICreateUserParams) {
   }
 }
 
+async function findOneByUsername(username: string | string[]) {
+  const userFound = await runSelectQuery(username);
+  return userFound;
+
+  async function runSelectQuery(username: string | string[]) {
+    const result = await database.query({
+      text: `
+      SELECT 
+        *
+      FROM
+        users
+      WHERE
+        LOWER(username) = LOWER($1)
+      LIMIT 
+        1
+      ;`,
+      values: [username],
+    });
+
+    if (result.rowCount === 0) {
+      throw new NotFoundError({
+        message: "O username informado não foi encontrado no sistema.",
+        action: "Verifique o username e tente novamente.",
+      });
+    }
+
+    return result.rows[0];
+  }
+}
+
 const user = {
   create,
+  findOneByUsername,
 };
 
 export default user;
