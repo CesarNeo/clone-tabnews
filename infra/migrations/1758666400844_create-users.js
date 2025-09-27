@@ -1,4 +1,3 @@
-
 exports.up = (pgm) => {
   pgm.createTable("users", {
     id: {
@@ -34,7 +33,7 @@ exports.up = (pgm) => {
       default: pgm.func("timezone('utc', now())"),
       notNull: true,
     },
-  })
+  });
 };
 
 exports.down = false;
