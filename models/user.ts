@@ -1,5 +1,6 @@
 import database from "infra/database";
 import { NotFoundError, ValidationError } from "infra/errors";
+import password from "./password";
 
 interface ICreateUserParams {
   username: string;
@@ -10,6 +11,7 @@ interface ICreateUserParams {
 async function create(userInputValues: ICreateUserParams) {
   await validateUniqueEmail(userInputValues.email);
   await validateUniqueUsername(userInputValues.username);
+  await hashPasswordInObject(userInputValues);
 
   const newUser = await runInsertQuery(userInputValues);
   return newUser;
@@ -54,6 +56,11 @@ async function create(userInputValues: ICreateUserParams) {
         action: "Utilize outro email para se cadastrar.",
       });
     }
+  }
+
+  async function hashPasswordInObject(userInputValues: ICreateUserParams) {
+    const hashedPassword = await password.hash(userInputValues.password);
+    userInputValues.password = hashedPassword;
   }
 
   async function runInsertQuery(userInputValues: ICreateUserParams) {
