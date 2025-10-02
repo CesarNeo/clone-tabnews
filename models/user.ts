@@ -2,13 +2,13 @@ import database from "infra/database";
 import { NotFoundError, ValidationError } from "infra/errors";
 import password from "./password";
 
-interface ICreateUserParams {
+export interface ICreateUserParams {
   username: string;
   email: string;
   password: string;
 }
 
-type TUser = {
+export type TUser = {
   id: string;
   username: string;
   email: string;
