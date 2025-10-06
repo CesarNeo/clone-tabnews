@@ -2,7 +2,10 @@ export class InternalServerError extends Error {
   action: string;
   statusCode: number;
 
-  constructor({ cause, statusCode }) {
+  constructor({
+    cause,
+    statusCode,
+  }: { cause?: Error; statusCode?: number } = {}) {
     super("Um erro interno não esperado aconteceu.", { cause });
     this.name = "InternalServerError";
     this.action = "Entre em contato com o suporte.";
@@ -90,6 +93,38 @@ export class NotFoundError extends Error {
       action ||
       "Verifique se os parâmetros enviados na consulta estão corretos.";
     this.statusCode = 404;
+  }
+
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      action: this.action,
+      status_code: this.statusCode,
+    };
+  }
+}
+
+export class UnauthorizedError extends Error {
+  action: string;
+  statusCode: number;
+
+  constructor({
+    cause,
+    message,
+    action,
+  }: {
+    message: string;
+    action: string;
+    cause?: Error;
+  }) {
+    super(message || "Usuário não autenticado.", {
+      cause,
+    });
+    this.name = "UnauthorizedError";
+    this.action =
+      action || "Faça login e tente novamente para acessar este recurso.";
+    this.statusCode = 401;
   }
 
   toJSON() {

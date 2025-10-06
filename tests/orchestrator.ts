@@ -31,7 +31,7 @@ async function createUser({
   username,
   email,
   password,
-}: Partial<ICreateUserParams>) {
+}: Partial<ICreateUserParams> = {}) {
   return await user.create({
     username: username || faker.internet.username().replace(/[_.-]/g, ""),
     email: email || faker.internet.email(),
