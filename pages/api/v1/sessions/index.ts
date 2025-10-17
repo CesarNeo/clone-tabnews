@@ -10,7 +10,13 @@ router.post(postHandler);
 export default router.handler(controller.errorHandlers);
 
 async function postHandler(request: NextApiRequest, response: NextApiResponse) {
-  const userInputValues = request.body;
+  let userInputValues = request.body;
+  const hasStringifiedBody =
+    typeof userInputValues === "string" && userInputValues.length > 0;
+
+  if (hasStringifiedBody) {
+    userInputValues = JSON.parse(userInputValues);
+  }
 
   const authenticatedUser = await authentication.getAuthenticatedUser(
     userInputValues.email,
